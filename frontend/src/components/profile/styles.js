@@ -6,6 +6,9 @@ export const useStyles = makeStyles({
       marginTop:30,
     //   border:"1px black solid"
   },
+  header:{
+    height:"100px"
+  },
   mt:{
         marginTop: 40,
   },
@@ -29,6 +32,12 @@ export const useStyles = makeStyles({
   paymentButton:{
     width: "200px",
     borderRadius: "20px"
+  },
+  cards:{
+    // width:"500px"
+  },
+  grid:{
+    paddingLeft:"40px"
   }
   
 })

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useStyles } from './styles'
-import { Typography, Grid, Button, Card, CardContent, FormControlLabel, FormGroup, Checkbox, Switch } from '@material-ui/core';
+import { Typography, Grid, Button, Card, CardContent, FormControlLabel, FormGroup, Switch, Tooltip, IconButton } from '@material-ui/core';
 import axios from 'axios'
-
+import InfoIcon from '@material-ui/icons/Info';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+toast.configure()
 function Checkout() {
     const classes = useStyles()
     const [initialamount, setInitial] = useState(59.4);
@@ -27,6 +30,28 @@ function Checkout() {
         setState({ ...state, [event.target.name]: event.target.checked });
 
     };
+    const addTransaction = () => {
+        if (state.checked) {
+            axios.post('http://127.0.0.1:8000/transactions/create/', {
+                username: "radhika",
+                amount: fundAmount,
+            })
+                .then(response => {
+                    toast.info('Transaction added!', {
+                        position: "top-right",
+                        autoClose: 1000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        }
+    }
     return (
         <>
             <Grid container direction="column" className={classes.container} >
@@ -36,17 +61,44 @@ function Checkout() {
                     </Grid>
                 </Grid>
                 <Grid item >
-                    <Grid container justifyContent="flex-start" className={classes.mt} >
-                        <Grid item xs={8}>
+                    <Grid container justifyContent="flex-start" className={classes.card} spacing={3}>
+                        <Grid item xs={7}>
                             <Grid container justifyContent="flex-start">
                                 <Typography variant="h6" className={classes.heading}> PAYMENT METHODS</Typography>
+                                <Grid container direction="column" justifyContent="flex-start" className={classes.card}>
 
+                                    <Card>
+                                        <CardContent>
+                                            <Grid container direction="column" alignItems="flex-start">
+                                                <Button className={classes.payment}>
+                                                    <Typography variant="h6"> Wallets</Typography>
+                                                </Button>
+                                                <Button className={classes.payment, classes.card}>
+                                                    <Typography variant="h6"> Credit, Debit & ATM Cards</Typography>
+                                                </Button>
+                                                <Button className={classes.payment, classes.card}>
+                                                    <Typography variant="h6"> Sodexo Meal Pass</Typography>
+                                                </Button>
+                                                <Button className={classes.payment, classes.card}>
+                                                    <Typography variant="h6"> Netbanking</Typography>
+                                                </Button>
+                                                <Button className={classes.payment, classes.card}>
+                                                    <Typography variant="h6"> Pay via UPI</Typography>
+                                                </Button>
+                                                <Button className={classes.payment, classes.card}>
+                                                    <Typography variant="h6"> Cash</Typography>
+                                                </Button>
+                                            </Grid>
+                                        </CardContent>
+                                    </Card>
+
+                                </Grid>
                             </Grid>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={5}>
                             <Grid container justifyContent="flex-start"  >
                                 <Typography variant="h6" className={classes.heading}>SUMMARY</Typography>
-                                <Grid container direction="column" justifyContent="flex-start" className={classes.mt}>
+                                <Grid container direction="column" justifyContent="flex-start" className={classes.card}>
                                     <Card className={classes.greycard}>
                                         <CardContent>
                                             <Grid container direction="column" alignItems="flex-start">
@@ -58,7 +110,20 @@ function Checkout() {
                                     </Card>
                                     <Card className={classes.card}>
                                         <CardContent>
+                                            <Grid container direction="column" alignItems="flex-start">
+                                                <Typography variant="h5" gutterBottom>
+                                                    Your Order:
+                                                </Typography>
+                                            </Grid>
                                             <Grid container direction="row" justifyContent="space-between">
+                                                <Grid item>
+                                                    <Typography gutterBottom>Butter Beer</Typography>
+                                                </Grid>
+                                                <Grid item>
+                                                    <Typography gutterBottom>1 QTY</Typography>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container direction="row" justifyContent="space-between" className={classes.mt}>
                                                 <Grid item>
                                                     <Typography gutterBottom>Your total savings:</Typography>
                                                 </Grid>
@@ -82,30 +147,41 @@ function Checkout() {
                                                     <Typography gutterBottom>₹ {delivery}</Typography>
                                                 </Grid>
                                             </Grid>
-                                            <Grid container alignItems="center" className={classes.mt}>
-                                                <FormGroup >
-                                                    <FormControlLabel
-                                                        control={
-                                                            <Switch
-                                                                checked={state.checked}
-                                                                onChange={handleChange}
-                                                                name="checked"
-                                                                color="primary"
-                                                                inputProps={{ 'aria-label': 'secondary checkbox' }}
-                                                            />
-                                                        }
-                                                    />
-                                                </FormGroup>
-                                                <Typography> Make my order carbon neutral &nbsp; </Typography>
-                                                {state.checked
-                                                    ?
-                                                    <Typography>₹{ (fundAmount).toFixed(2)}</Typography>
-                                                    :
-                                                    <></>
-                                                }
+                                            <Grid container alignItems="center" justifyContent="flex-start" className={classes.card}>
+                                                <Grid item xs={3}>
+                                                    <FormGroup >
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Switch
+                                                                    checked={state.checked}
+                                                                    onChange={handleChange}
+                                                                    name="checked"
+                                                                    color="primary"
+                                                                    inputProps={{ 'aria-label': 'secondary checkbox' }}
+                                                                />
+                                                            }
+                                                        />
+                                                    </FormGroup>
+                                                </Grid>
+                                                <Grid item>
+                                                    <Typography>Make order carbon neutral </Typography>
+                                                </Grid>
+                                                <Grid item xs={2}>
+                                                    <Tooltip title="Your donation will be funded to organization working for climate change">
+                                                        <IconButton aria-label="Add info here">
+                                                            <InfoIcon />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </Grid>
+                                                <Grid item>
+                                                    {state.checked
+                                                        ?
+                                                        <Typography>₹{(fundAmount).toFixed(2)}</Typography>
+                                                        :
+                                                        <></>
+                                                    }
+                                                </Grid>
                                             </Grid>
-
-
                                             <Grid container direction="row" justifyContent="space-between" >
                                                 <Grid item>
                                                     <Typography gutterBottom>Grand Total:</Typography>
@@ -124,18 +200,19 @@ function Checkout() {
                                                     }
                                                 </Grid>
                                             </Grid>
+                                            <Grid container direction="row" justifyContent="center" className={classes.card}>
+                                                <Grid item>
+                                                    <Button variant="contained" color="primary" disableElevation className={classes.paymentButton} onClick={addTransaction}>Pay</Button>
+                                                </Grid>
+                                            </Grid>
                                         </CardContent>
                                     </Card>
                                 </Grid>
-
                             </Grid>
-
                         </Grid>
                     </Grid>
                 </Grid>
-
             </Grid>
-
         </>
     )
 }
