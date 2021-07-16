@@ -29,6 +29,16 @@ export const useStyles = makeStyles({
   paymentButton:{
     width: "200px",
     borderRadius: "20px"
-  }
+  },
+  paper: {
+    position: 'absolute',
+    width: "50vw",
+    left:"25vw",
+    top:"25vh",
+    backgroundColor: "white",
+    padding:"50px",
+    
+
+  },
   
 })
