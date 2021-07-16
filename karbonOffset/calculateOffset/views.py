@@ -17,10 +17,10 @@ class GenerateOffsetAmount(APIView):
         typeOfPackaging = request.data[1].get("details").get("type")
         weight = request.data[1].get("details").get("weight")
 
-        # if typeOfPackaging == "plastic":
-        #     metricTonCO2e = float(distance * 0.01) / float(90)
-        # trees = float(metricTonCO2e*6.00) / float(2.30211)
-        # amount = float(trees * 360.00) 
+        if typeOfPackaging == "plastic":
+            metricTonCO2e += float(weight * 6) / float(1000000000)
+        trees = float(metricTonCO2e*6.00) / float(1.10231)
+        amount += float(trees * 400.00) 
 
         OffsetAmount = {
             "amount":float(amount),
