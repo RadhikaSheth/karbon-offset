@@ -8,7 +8,9 @@ Tech Stack:
 ```
 Backend: Python-Django-RestAPIs
 Frontend: React-Material UI-Axios
+Database: mysqlite
 ```
+
 
 How to run this on local:
 
